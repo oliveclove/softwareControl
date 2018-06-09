@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd 
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd" 
+	xmlns:tx="http://www.springframework.org/schema/tx">
+	
+   <!-- 配置数据源-->
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource">
+		   <property name="driverClassName"> 
+                     <value>com.mysql.jdbc.Driver</value> 
+              </property> 
+		<property name="url"
+			value="jdbc:mysql://127.0.0.1:3306/software">
+		</property>
+		<property name="username" value="root"></property>
+		<property name="password" value="123456"></property>
+		<!-- 连接池启动时的初始值 -->
+		<property name="initialSize" value="30"></property>
+		<!-- 连接池的最大值 -->
+		<property name="maxActive" value="500"></property>
+		<!-- 最小空闲值 -->
+		<property name="minIdle" value="1"></property>
+	</bean>
+	
+   <!-- 配置sessionFactory,配置数据库方言-->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<!-- sessionFactory依赖于数据源（依赖注入） -->
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.MySQLDialect
+				</prop>
+			</props>
+		</property>
+		<!-- 配置hibernate的对象映射文件 -->
+		<property name="mappingResources">
+			<list>
+				<value>com/softwareControl/Model/Student.hbm.xml</value>
+				<value>com/softwareControl/Model/Chat.hbm.xml</value>
+				<value>com/softwareControl/Model/File.hbm.xml</value>
+				<value>com/softwareControl/Model/Grade.hbm.xml</value>
+				<value>com/softwareControl/Model/Groups.hbm.xml</value>
+				<value>com/softwareControl/Model/Teacher.hbm.xml</value>
+				<value>com/softwareControl/Model/Admin.hbm.xml</value>
+				<value>com/softwareControl/Model/Renwu.hbm.xml</value>
+			</list>
+		</property></bean>
+		<!-- 配置数据库的事务 -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />	
+	</bean>
+	<!-- 启用事务的注解 -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+	
+	<!-- Dao注入sessionFactory -->
+	<bean
+		id="teacherDAO" class="com.softwareControl.Dao.TeacherDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+</bean>
+	<bean id="FileDAO" class="com.softwareControl.Dao.FileDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="studentDAO" class="com.softwareControl.Dao.StudentDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="ChatDAO" class="com.softwareControl.Dao.ChatDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="GroupsDAO" class="com.softwareControl.Dao.GroupsDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="GradeDAO" class="com.softwareControl.Dao.GradeDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="AdminDAO" class="com.softwareControl.Dao.AdminDAO">
+	<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="=RenwuDAO" class="com.softwareControl.Dao.RenwuDAO">
+	<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<!-- service注入dao class为service的实现类-->
+	<bean id="loginservice" class="com.softwareControl.Service.LoginService">
+	<property name="teacherdao" ref="teacherDAO"></property>
+	<property name="studentdao" ref="studentDAO"></property>
+	<property name="admindao" ref="AdminDAO"></property>
+	</bean>
+	
+	<bean id="teacherservice" class="com.softwareControl.Service.TeacherService">
+	<property name="teacherdao" ref="teacherDAO"></property>
+	</bean>
+	
+	<bean id="studentservice" class="com.softwareControl.Service.StudentService">
+	<property name="studentdao" ref="studentDAO"></property>
+	</bean>
+	
+	<bean id="groupservice" class="com.softwareControl.Service.GroupService">
+	<property name="groupdao" ref="GroupsDAO"></property>
+	</bean>
+	
+	<bean id="chatservice" class="com.softwareControl.Service.ChatService">
+	<property name="chatdao" ref="ChatDAO"></property>
+	</bean>
+	
+	<bean id="gradeservice" class="com.softwareControl.Service.GradeService">
+	<property name="gradedao" ref="GradeDAO"></property>
+	</bean>
+	
+	<bean id="renwuservice" class="com.softwareControl.Service.RenwuService">
+	<property name="renwudao" ref="=RenwuDAO"></property>
+	</bean>
+	
+	<bean id="fileservice" class="com.softwareControl.Service.FileService">
+	<property name="dao" ref="FileDAO"></property>
+	</bean>
+	
+	<!-- action注入service,class为路径 -->
+	<bean id="testAction" class="com.softwareControl.Action.TestAction" scope="prototype">
+	</bean>
+	<bean id="loginAction" class="com.softwareControl.Action.LoginAction" scope="prototype">
+	<property name="loginservice" ref="loginservice"></property>
+	</bean>
+	<bean id="teacherAction" class="com.softwareControl.Action.TeacherAction" scope="prototype">
+	<property name="teacherService" ref="teacherservice"></property>
+	</bean>
+	<bean id="uploadAction" class="com.softwareControl.Action.UploadAction" scope="prototype">
+	<property name="filedao" ref="FileDAO"></property>
+	</bean>
+	<bean id="studentAction" class="com.softwareControl.Action.StudentAction" scope="prototype">
+	<property name="studentService" ref="studentservice"></property>
+	</bean>
+	<bean id="groupAction" class="com.softwareControl.Action.GroupAction">
+	<property name="groupService" ref="groupservice"></property>
+	</bean>
+	<bean id="chatAction" class="com.softwareControl.Action.ChatAction">
+	<property name="chatService" ref="chatservice"></property>
+	</bean>
+	<bean id="gradeAction" class="com.softwareControl.Action.GradeAction">
+	<property name="gradeservice" ref="gradeservice"></property>
+	</bean>
+	<bean id="renwuAction" class="com.softwareControl.Action.RenwuAction">
+	<property name="renwuservice" ref="renwuservice"></property>
+	</bean>
+	<bean id="fileAction" class="com.softwareControl.Action.FileAction">
+	<property name="fileservice" ref="fileservice"></property>
+	</bean>
+	<bean id="updownAction" class="com.softwareControl.Action.UpdownAction">
+	</bean>
+	
+	<!-- 测试-->
+	<bean id="testdao" class="com.test.testdao">
+	<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean id="TeacherDAO" class="com.softwareControl.Dao.TeacherDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	</beans>

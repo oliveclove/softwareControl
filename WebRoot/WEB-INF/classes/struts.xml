@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+
+<constant name="strus.objectFactory" value="spring" />
+<constant name="struts.enable.DynamicMethodInvocation" value="false" />
+<constant name="struts.devMode" value="true" />
+<constant name="struts.i18n.encoding" value="UTF-8"/>
+
+<package name="test" namespace="/test" extends="struts-default">
+<action name="list" class="testAction" method="execute">
+<result name="list">/WEB-INF/index.jsp</result>
+</action>
+</package>
+
+<package name="teacher" namespace="/teacher" extends="struts-default">
+<action name="doregister" class="teacherAction" method="execute">
+<result name="ok">/WEB-INF/Login.jsp</result>
+<result name="err">/WEB-INF/404.jsp</result>
+</action>
+<action name="dologin" class="loginAction" method="execute">
+<result name="ok">/pages/index.jsp</result>
+<result name="ok2">/pages/Student_index.jsp</result>
+<result name="ok3">/pages/Admin_index.jsp</result>
+<result name="err">/WEB-INF/404.jsp</result>
+</action>
+</package>
+
+<package name="student" namespace="/student" extends="struts-default">
+<action name="showall" class="studentAction" method="execute">
+</action>
+<action name="findbyName" class="studentAction" method="findbyName">
+<result name="ok">/pages/studentInfo.jsp</result>
+<result name="err">/WEB-INF/404.jsp</result>
+</action>
+</package>
+
+<package name="view" namespace="/view" extends="struts-default">
+<action name="Register">
+<result>/WEB-INF/Register.jsp</result>
+</action>
+<action name="Register2">
+<result>/WEB-INF/Register2.jsp</result>
+</action>
+</package>
+
+<package name="file" namespace="/file" extends="struts-default">
+<action name="upload" class="uploadAction" method="execute">
+<result name="ok">/pages/success.jsp</result>
+<result name="err">/WEB-INF/404.jsp</result>
+</action>
+<action name="showall" class="fileAction" method="execute">
+<result name="ok">/pages/renwu_fabu.jsp</result>
+<result name="err">/WEB-INF/404.jsp</result>
+</action>
+<action name="download" class="updownAction" method="execute">
+<result type="stream">
+ <!--下载时，客户端显示的下载的文件名 -->  
+<param name="contentDisposition"> attachment; filename=${filename}</param>  
+<!-- 数据的缓冲大小 -->  
+<param name="bufferSize">2048</param>  
+</result>
+</action>
+</package>
+
+<package name="group" namespace="/group" extends="struts-default">
+<action name="allGroup" class="groupAction" method="execute">
+<result name="ok">/pages/group.jsp</result>
+<result name="err">/WEB-INF/404.jsp</result>
+</action>
+<action name="findbyName" class="groupAction" method="findbyName">
+<result name="ok">/pages/groupInfo.jsp</result>
+<result name="err">/WEB-INF/404.jsp</result>
+</action>
+</package>
+
+<package name="chat" namespace="/chat" extends="struts-default">
+<action name="showall" class="chatAction" method="execute">
+<result name="ok">/pages/chat.jsp</result>
+<result name="err">/WEB-INF/404.jsp</result>
+</action>
+<action name="addcontent" class="chatAction" method="add">
+<result name="ok">/pages/chat.jsp</result>
+<result name="err">/WEB-INF/404.jsp</result>
+</action>
+</package>
+
+<package name="grade" namespace="/grade" extends="struts-default">
+<action name="showall" class="gradeAction" method="execute">
+<result name="ok">/pages/grade.jsp</result>
+<result name="err">/WEB-INF/404.jsp</result>
+</action>
+<action name="findbyName" class="gradeAction" method="findbyName">
+<result name="ok">/pages/gradeInfo.jsp</result>
+<result name="err">/WEB-INF/404.jsp</result>
+</action>
+<action name="findbysession" class="gradeAction" method="findbysession">
+<result name="ok">/pages/gradeInfo2.jsp</result>
+<result name="err">/WEB-INF/404.jsp</result>
+</action>
+<action name="addgrade" class="gradeAction" method="addGrade">
+<result name="ok">/pages/grade.jsp</result>
+<result name="err">/WEB-INF/404.jsp</result>
+</action>
+</package>
+
+<package name="renwu" namespace="/renwu" extends="struts-default">
+<action name="showall" class="renwuAction" method="execute">
+<result name="ok">/pages/renwu_guanli.jsp</result>
+<result name="err">/WEB-INF/404.jsp</result>
+</action>
+<action name="add" class="renwuAction" method="add">
+<result name="ok">/pages/renwu_guanli.jsp</result>
+<result name="err">/WEB-INF/404.jsp</result>
+</action>
+</package>
+</struts>    
